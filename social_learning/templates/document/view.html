@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+</head>
+<body>
+  <header class="bg-light">
+    <div class="px-3 py-2 bg-dark text-white">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+              <h1>Alclub</h1>
+            </a>
+  
+            <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+              <li>
+                <a href="{% url 'gigs' %}" class="nav-link text-white">
+                  <i class="bi bi-person-video3"></i>
+                  Gia Sư
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'post' %}" class="nav-link text-white">
+                  <i class="bi bi-people"></i>
+                  Cộng Đồng
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'question' %}" class="nav-link text-white">
+                  <i class="bi bi-question-circle"></i>
+                  Hỏi & Đáp
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'document' %}" class="nav-link text-secondary">
+                  <i class="bi bi-file-earmark"></i>
+                  Tài Liệu
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'trade' %}" class="nav-link text-white">
+                  <i class="bi bi-coin"></i>
+                  Tài Chính
+                </a>
+              </li>
+              <li>
+                <div class="dropdown">
+                  <button class="nav-link text-white dropdown-toggle" style="border: none;background-color: transparent;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle"></i> Tài Khoản
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url 'your_profile' %}" class="dropdown-item">Thông Tin Tài Khoản</a></li>
+                    <li><a href="{% url 'update_profile' %}" class="dropdown-item">Thay Đổi Thông Tin Tài Khoản</a></li>
+                    <li><a href="{% url 'log_out' %}" class="dropdown-item link-danger">Đăng Xuất</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="px-3 py-2 shadow mb-3">
+        <div class="container rows flex-wrap justify-content-center" style="display: flex;">
+          <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+            <div class="d-flex">
+              <input placeholder="Tìm kiếm..." type="text" class="form-control w-100" style="margin-right: 10px;">
+              <button class="btn btn-success" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+          </form>
+
+          <div class="text-end justify-content-end align-items-end">
+            <a class="btn btn-primary">Số dư của bạn: {{teen}}</a>
+            {% if bio == post.user %}
+                <button type="button" data-bs-toggle="modal" data-bs-target="#delete_question" class="btn btn-danger"><i class="bi bi-x-lg"></i></button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+</header>
+    <main>
+        <div class="container">
+            <br>
+            <h1 class="title is-1">{{post.title}}</h1>
+            <div class="bg-secondary w-100 rounded" style="height: 3px; margin-top: 10px;margin-bottom: 10px;"></div>
+            <p>{{post.description}}</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Khối Lớp: {{post.grade}}</li>
+                <li class="list-group-item">Học Vấn: {{post.edu_rank.name}}</li>
+                <li class="list-group-item">Môn Học: {{post.subject.name}}</li>
+                <li class="list-group-item">Giá cả: {{post.price}} Teen</li>
+            </ul>
+            {% if post.image %}
+                <img src="{{post.image.url}}" class="img-fluid w-100 h-50 rounded" style="object-fit: cover;" />
+            {% endif %}
+            <div class="row">
+                <div class="col-lg">
+                    <a href="{% url 'like_document' id=post.id %}" class="btn btn-primary w-100">Like</a>
+                </div>
+                <div class="col-lg">
+                    <a href="{% url 'like_document' id=post.id %}" class="btn btn-danger w-100">Dislike</a>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-lg">
+                    {% if check %}
+                    <a href="{{post.file}}" class="btn btn-info w-100">Lấy Tài Liệu (Đã Mua)</a>
+                    {% else %}
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#check_code"  class="btn btn-info w-100">Mua Tài Liệu</button>
+                    {% endif %}
+                </div>
+            </div>
+            <br>
+            <div class="bg-secondary w-100 rounded" style="height: 3px;"></div>
+            <br>
+            <h2 class="text-center">Bình Luận</h2>
+            <form action="{% url 'comment_document' id=post.id %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+                <div class="row w-100">
+                    <div class="col-lg align-self-center w-100">
+                        <div class="d-lg-flex w-100">
+                            <input placeholder="Bình Luận" type="text" class="form-control w-100" style="margin-right: 10px;">
+                            <button type="submit" class="btn btn-success"><i class="bi bi-send"></i></button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+        <br>
+            {% if comments %}
+                {% for comment in comments %}
+                <div class="card" id="{{comment.id}}">
+                    <div class="card-body">
+                     <h6>Trả lời</span> {{comment.content}}</h6>
+                     <p>{{comment.user.username}} - {{comment.datetime}} - <a type="button" class="link-secondary" data-bs-toggle="modal" data-bs-target="#reply_comment_1">Trả lời</a></p>
+                    </div>
+                 </div>
+                    <div class="modal fade" id="reply_comment_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'reply_comment_document' id=comment.id %}" method="post" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                    <div class="row w-100">
+                                        <div class="col-lg align-self-center w-100">
+                                            <div class="d-lg-flex w-100">
+                                                <input placeholder="Bình Luận" type="text" class="form-control w-100" style="margin-right: 10px;">
+                                                <button type="submit" class="btn btn-success"><i class="bi bi-send"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal fade" id="update_comment_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'updatecomment_document' id=comment.id %}" method="post" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                    <div class="row w-100">
+                                        <div class="col-lg align-self-center w-100">
+                                            <div class="d-lg-flex w-100">
+                                                <input placeholder="Bình Luận" type="text" class="form-control w-100" style="margin-right: 10px;">
+                                                <button type="submit" class="btn btn-success"><i class="bi bi-send"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% if comment.reply.all %}
+                        {% for reply in comment.reply.all %}
+                        <div class="card" id="{{reply.id}}">
+                           <div class="card-body">
+                            <h6><span class="bg-primary text-light rounded" style="padding: 5px;">Trả lời</span> {{reply.content}}</h6>
+                            <p>{{reply.user.username}} - {{reply.datetime}} - <a type="button" class="link-secondary" data-bs-toggle="modal" data-bs-target="#reply_comment_2">Trả lời</a></p>
+                           </div>
+                        </div>
+                          <div class="modal fade" id="update_comment_2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                      {% csrf_token %}
+                                        <div class="row w-100">
+                                            <div class="col-lg align-self-center w-100">
+                                                <div class="d-lg-flex w-100">
+                                                    <input placeholder="Bình Luận" type="text" class="form-control w-100" style="margin-right: 10px;">
+                                                    <button type="submit" class="btn btn-success"><i class="bi bi-send"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <div class="modal fade" id="check_code" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <form action="{% url 'pay_document' id=post.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                          <div class="row w-100">
+                              <div class="col-lg align-self-center w-100">
+                                  <div class="d-lg-flex w-100">
+                                      <input placeholder="Nhập code" type="number" maxlength="6" minlength="6" name="code" class="form-control w-100" style="margin-right: 10px;">
+                                      <button type="submit" class="btn btn-success w-50"><i class="bi bi-send"></i></button>
+                                  </div>
+                              </div>
+                          </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+</body>

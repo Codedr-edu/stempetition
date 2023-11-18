@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+</head>
+<body>
+    <header class="bg-light">
+        <div class="px-3 py-2 bg-dark text-white">
+            <div class="container">
+              <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                  <h1>Alclub</h1>
+                </a>
+      
+                <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                  <li>
+                    <a href="{% url 'gigs' %}" class="nav-link text-white">
+                      <i class="bi bi-person-video3"></i>
+                      Gia Sư
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'post' %}" class="nav-link text-white">
+                      <i class="bi bi-people"></i>
+                      Cộng Đồng
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'question' %}" class="nav-link text-secondary">
+                      <i class="bi bi-question-circle"></i>
+                      Hỏi & Đáp
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'document' %}" class="nav-link text-white">
+                      <i class="bi bi-file-earmark"></i>
+                      Tài Liệu
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'trade' %}" class="nav-link text-white">
+                      <i class="bi bi-coin"></i>
+                      Tài Chính
+                    </a>
+                  </li>
+                  <li>
+                    <div class="dropdown">
+                      <button class="nav-link text-white dropdown-toggle" style="border: none;background-color: transparent;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i> Tài Khoản
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a href="{% url 'your_profile' %}" class="dropdown-item">Thông Tin Tài Khoản</a></li>
+                        <li><a href="{% url 'update_profile' %}" class="dropdown-item">Thay Đổi Thông Tin Tài Khoản</a></li>
+                        <li><a href="{% url 'log_out' %}" class="dropdown-item link-danger">Đăng Xuất</a></li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="px-3 py-2 shadow mb-3">
+            <div class="container rows flex-wrap justify-content-center" style="display: flex;">
+              <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                <div class="d-flex">
+                  <input placeholder="Tìm kiếm..." type="text" class="form-control w-100" style="margin-right: 10px;">
+                  <button class="btn btn-success" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+              </form>
+
+              <div class="text-end justify-content-end align-items-end">
+                <a class="btn btn-primary">Số dư của bạn: {{teen}}</a>
+                {% if bio == post.user %}
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#delete_question" class="btn btn-danger"><i class="bi bi-x-lg"></i></button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+    </header>
+    <main>
+        <div class="container">
+            <br>
+            <h1 class="title is-1">{{post.title}}</h1>
+            <div class="bg-secondary w-100 rounded" style="height: 3px; margin-top: 10px;margin-bottom: 10px;"></div>
+            <p>{{post.description}}</p>
+            <h3>Phần thưởng lên đến: {{post.price}} Teen</h3>
+            {% if post.image %}
+                <img src="{{post.image.url}}" class="img-fluid w-100 h-50 rounded" style="object-fit: cover;" />
+            {% endif %}
+            <div class="row">
+                <div class="col-lg">
+                    <a href="/like/question/{{post.id}}/" class="btn btn-primary w-100">Like</a>
+                </div>
+                <div class="col-lg">
+                    <a href="/dislike/question/{{post.id}}/" class="btn btn-danger w-100">Dislike</a>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-lg">
+                    {% if post.file %}
+                        <a href="{{post.file}}" class="btn btn-info w-100">Tài Liệu</a>
+                    {% else %}
+                        <a class="btn disabled btn-info w-100">Tài Liệu</a>
+                    {% endif %}
+                </div>
+            </div>
+            <br>
+            <div class="bg-secondary w-100 rounded" style="height: 3px;"></div>
+            <br>
+            <h2 class="text-center">Lời Giải</h2>
+            <form action="/answer/question/{{post.id}}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+                <div class="row w-100">
+                    <div class="col-lg align-self-center w-100">
+                        <div class="d-lg-flex w-100">
+                            <textarea class="form-control" name="content">Câu Trả lời....</textarea>
+                        </div>
+                        <br>
+                        <div class="d-lg-flex w-100">
+                          <input type="file" name="image" class="form-control" style="margin-right: 10px;">
+                          <input type="text" name="file" placeholder="Tài liệu tham khảo" class="form-control">
+                        </div>
+                        <br>
+                        <div class="d-lg-flex">
+                          <button type="submit" class="btn btn-success w-100">Trả lời</button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+        <br>
+            {% if answers %}
+                {% for answer in answers %}
+                    <div class="card" id="{{answer.id}}">
+                        {% if answer.image %}
+                            <img src="{{answer.image.url}}" class="img-fluid w-100 h-50" style="object-fit: cover;" />
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg align-self-start">
+                                    <h4>{{answer.content}}</h4>
+                                </div>
+                                <div class="col-lg align-self-end">
+                                    <div class="d-lg-flex">
+                                        {% if bio == post.user and post.answered == 0 %}
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#check_question" class="btn btn-success"><i class="bi bi-check-lg"></i></button>
+                                            <div class="modal fade" id="check_question" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                              <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                      <h1>Chọn câu trả lời này?</h1>
+                                                      <p>Bạn có chắc chắn rằng sẽ chọn câu trả lời này</p>
+                                                      <div class="d-lg-flex">
+                                                        <button class="btn btn-secondary" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">Tôi cần suy nghĩ thêm</button>
+                                                        <a class="btn btn-success" href="{% url 'pay_question' id=answer.id %}">Tôi chắc chắn</a>
+                                                      </div>
+                                                  </form>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if bio == answer.user %}
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#delete_question" class="btn btn-danger"><i class="bi bi-x-lg"></i></button>
+                                        <div class="modal fade" id="delete_question" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <h1>Xóa câu trả lời này?</h1>
+                                                  <p>Bạn có chắc chắn rằng sẽ xóa câu trả lời này</p>
+                                                  <div class="d-lg-flex">
+                                                    <button class="btn btn-secondary" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">Tôi cần suy nghĩ thêm</button>
+                                                    <a class="btn btn-success" href="{% url 'delete_answer' id=answer.id %}">Tôi chắc chắn</a>
+                                                  </div>
+                                              </form>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-lg">
+                                    <a href="{% url 'like_answer' id=answer.id %}" class="btn btn-primary w-100">Like</a>
+                                </div>
+                                <div class="col-lg">
+                                    <a href="{% url 'dislike_answer' id=answer.id %}" class="btn btn-danger w-100">Dislike</a>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-lg">
+                                    {% if post.file %}
+                                        <a href="{{answer.file}}" class="btn btn-info w-100">Tài Liệu</a>
+                                    {% else %}
+                                        <a class="btn disabled btn-info w-100">Tài Liệu</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-center">Chưa có bình luận nào</p>
+            {% endif %}
+</body>

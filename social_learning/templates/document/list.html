@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <style>
+      @media only screen and (min-width: 1000px) {
+        .is-none{
+          margin-left: -95%;
+        }
+      }
+    </style>
+</head>
+<body>
+  <header class="bg-light">
+    <div class="px-3 py-2 bg-dark text-white">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+              <h1>Alclub</h1>
+            </a>
+  
+            <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+              <li>
+                <a href="{% url 'gigs' %}" class="nav-link text-white">
+                  <i class="bi bi-person-video3"></i>
+                  Gia Sư
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'post' %}" class="nav-link text-white">
+                  <i class="bi bi-people"></i>
+                  Cộng Đồng
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'question' %}" class="nav-link text-white">
+                  <i class="bi bi-question-circle"></i>
+                  Hỏi & Đáp
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'document' %}" class="nav-link text-secondary">
+                  <i class="bi bi-file-earmark"></i>
+                  Tài Liệu
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'trade' %}" class="nav-link text-white">
+                  <i class="bi bi-coin"></i>
+                  Tài Chính
+                </a>
+              </li>
+              <li>
+                <div class="dropdown">
+                  <button class="nav-link text-white dropdown-toggle" style="border: none;background-color: transparent;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle"></i> Tài Khoản
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url 'your_profile' %}" class="dropdown-item">Thông Tin Tài Khoản</a></li>
+                    <li><a href="{% url 'update_profile' %}" class="dropdown-item">Thay Đổi Thông Tin Tài Khoản</a></li>
+                    <li><a href="{% url 'log_out' %}" class="dropdown-item link-danger">Đăng Xuất</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="px-3 py-2 shadow mb-3">
+        <div class="container rows flex-wrap justify-content-center" style="display: flex;">
+          <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+            <div class="d-flex">
+              <input placeholder="Tìm kiếm..." type="text" class="form-control w-100" style="margin-right: 10px;">
+              <button class="btn btn-success" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+          </form>
+
+          <div class="text-end justify-content-end align-items-end">
+            <a class="btn btn-primary">Số dư của bạn: {{teen}}</a>
+            {% if bio == post.user %}
+                <button type="button" data-bs-toggle="modal" data-bs-target="#delete_question" class="btn btn-danger"><i class="bi bi-x-lg"></i></button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+</header>
+    <main>
+        <div class="container">
+            <br>
+            <div class="card w-75 d-flex justify-content-center align-items-center mx-auto vh-75" style="box-shadow: none;border: none;">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success w-100 shadow">Đăng Tài Liệu</button>
+            </div>
+            <br>
+            {% if posts|length != 0 %}
+                {% for post in posts %}
+                    <div class="d-flex justify-content-center shadow align-items-start w-75 vh-75 mx-auto card">
+                        <div class="card-header w-100">
+                            <div class="container">
+                                <div class="columns">
+                                  <div class="column">
+                                    <img src="{{post.user.avatar.url}}" class="rounded-circle" style="width: 50px;"> <a class="link-dark">   {{post.user.user.username}}</a>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if post.image %}
+                        <img src="{{post.image.url}}" class="w-100 h-50 rounded" style="object-fit: cover;" />
+                        {% endif %}
+                        <div class="card-body w-100">
+                        <a href="{% url 'document_view' id=post.id %}" class="link-dark"><h3 class="card-text text-start align-items-start">{{post.title}}</h3></a>
+                        <br>
+                        <div class="columns">
+                          <div class="column w-100">
+                            <a href="{% url 'like_document' id=post.id %}" class="btn btn-primary w-100"><i class="bi bi-hand-thumbs-up"></i> {{post.like.count}}</a>
+                          </div>
+                          <div class="column w-100">
+                            <a href="{% url 'dislike_document' id=post.id %}" class="btn btn-danger w-100"><i class="bi bi-hand-thumbs-down"></i> {{post.dislike.count}}</a>
+                          </div>
+                          <div class="column w-100">
+                            <a href="{% url 'document_view' id=post.id %}" class="btn btn-secondary w-100"><i class="bi bi-chat-left-text"></i> {{post.comment_count}}</a>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="card-footer w-100 align-items-center justify-content-center">
+                          <p class="text-center">{{post.datetime}}</p>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            {% else %}
+                    <div class="card w-75 align-items-center justify-content-center vh-75 mx-auto d-flex text-center">
+                        <h1 style="padding: 15px;">Chưa có bài viết nào</h1>
+                    </div>
+            {% endif %}
+        </div>
+    </main>
+    <footer class="fixed-bottom text-center" style="margin-bottom: 10px;">
+        Copyright
+    </footer>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <h5 class="title is-4">Đăng tài liệu</h5>
+                  <form action="{% url 'create_document' %}" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                      <div class="row">
+                        <div class="col-lg">
+                            <label>Tiêu Đề</label>
+                            <input type="text" name="title" class="form-control">
+                        </div>
+                        <div class="col-lg">
+                            <label>Học Vấn</label>
+                            <select id="edu_rank" name="education_rank" class="form-select" required>
+                                {% for edu in educations %}
+                                    <option value="{{edu.id}}">{{edu.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg">
+                            <label>Lớp</label>
+                            <input type="number" name="grade" class="form-control w-100" required>
+                        </div>
+                      </div>
+                      <div class="row" style="margin-top: 10px;">
+                        <div class="col">
+                            <label>Ảnh</label>
+                            <input type="file" name="image" class="form-control" required>
+                        </div>
+                        <div class="col">
+                            <button type="button" style="background: none;border: none;" data-toggle="tooltip" data-placement="top" title="Hiện Hệ Thống Của Chúng Tôi Chưa Đủ Nhiều Để Chứa File. Xin Lỗi Vì Sự Bất Tiện Này!">Link File</button>
+                            <input type="text" name="file" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col">
+                            <label>Subject</label>
+                            <select id="edu_rank" name="subject" class="form-select" required>
+                                {% for subject in subjects %}
+                                    <option value="{{subject.id}}">{{subject.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Phần Thưởng</label>
+                            <input type="number" name="price" step="0.01" class="form-control w-100" required>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col">
+                            <label>Mô Tả</label>
+                            <textarea class="form-control" name="description" rows="5" cols="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col">
+                            <button type="submit" class="btn btn-success w-100">Đăng</button>
+                        </div>
+                    </div>
+                  </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
