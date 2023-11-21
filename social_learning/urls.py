@@ -124,4 +124,15 @@ urlpatterns = [
          views.generate_payment, name="generation_link_payment"),
     path("copy/gig/payment/link/<int:id>",
          views.copy_gig_payment_link, name="copy_gig_payment_link"),
+    # gig_other_view_function
+    path("gigs/user/all/", views.view_all_gig, name="user_gigs_view_all"),
+    path("apply/list/gig/<int:id>", views.check_apply, name="apply_list_check"),
+    path("student/list/gig/<int:id>",
+         views.check_student, name="student_apply_gig"),
+    # gig_other_function
+    path("apply/gig/<int:id>", views.apply_to_gig, name="apply_gig"),
+    path("accept/gig/<int:id>/user/<int:user_id>",
+         views.accept_to_gig, name="accept_gig"),
+    path("stop/gig/<int:id>/user/<int:user_id>",
+         views.stop_learn_gig, name="stop_learn_gig")
 ]

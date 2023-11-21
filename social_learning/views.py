@@ -174,7 +174,7 @@ def gigs_list_view(request):
         post = Gigs.objects.filter(
             grade__lte=bio.grade, education_rank=bio.edu_rank).all()
         context = {"posts": post[::-1], 'teen': teen,
-                   'subjects': subject, 'educations': edu_rank}
+                   'subjects': subject, 'educations': edu_rank, "bio": bio}
     else:
         return redirect("a_login")
     return render(request, "gigs/list.html", context)
@@ -456,7 +456,8 @@ def gigs_payment(request, id):
                     wallet_passcode=final, user=request.user).first()
                 teen_balanced = float(web3.to_wei(
                     contract.functions.balanceOf(bio.address).call(), 'ether'))
-                check = join_cls.objects.get(user=bio, gig=gigs)
+                check = join_cls.objects.get(
+                    user=bio, gig=gigs, status="Đang Học")
                 if final == bio.wallet_passcode and teen_balanced >= gigs.price and check:
                     learn = Learn.objects.filter(
                         gig=gigs, check_stu=check).last()
@@ -1200,9 +1201,10 @@ def update_comment_document(request, id):
 # read_api
 def gigs_view(request, id):
     if request.user.is_authenticated:
+        bio = Bio.objects.get(user=request.user)
         gigs = Gigs.objects.filter(id=id).first()
         noti = Comment_Gigs.objects.filter(post=gigs).all()
-        context = {'post': gigs, "notis": noti}
+        context = {'post': gigs, "notis": noti, 'bio': bio}
     else:
         return redirect('a_login')
     return render(request, 'gigs/view.html', context)
@@ -1532,3 +1534,106 @@ def copy_gig_payment_link(request, id):
     else:
         return redirect("a_login")
     return render(request, 'gig/copy_payment_link.html', context)
+
+
+def apply_to_gig(request, id):
+    if request.user.is_authenticated:
+        bio = Bio.objects.get(user=request.user)
+        post = Gigs.objects.filter(id=id).first()
+        check = join_cls.objects.get(gig=post, student=bio)
+        if not check and bio != post.user:
+            if check.status != "Đang Học":
+                sql = join_cls(gig=post, student=bio,
+                               status="Chờ Duyệt Đơn Đăng Ký")
+                sql.save()
+            else:
+                return redirect("all_error")
+            return redirect("gigs_view", id=id)
+        else:
+            return redirect("all_error")
+    else:
+        return redirect("a_login")
+
+
+def accept_to_gig(request, id, user_id):
+    if request.user.is_authenticated:
+        bio = Bio.objects.get(user=request.user)
+        student = Bio.objects.filter(user__id=user_id).first()
+        post = Gigs.objects.filter(id=id).first()
+        check = join_cls.objects.get(gig=post, student=student)
+        if not check and bio != post.user and student != post.user:
+            if check.status == "Chờ Duyệt Đơn Đăng Ký":
+                check.status = "Đang Học"
+                check.save()
+            else:
+                return redirect("all_error")
+            return redirect("gigs_view", id=id)
+        else:
+            return redirect("all_error")
+    else:
+        return redirect("a_login")
+
+
+def stop_learn_gig(request, id, user_id):
+    if request.user.is_authenticated:
+        bio = Bio.objects.get(user=request.user)
+        student = Bio.objects.filter(user__id=user_id).first()
+        post = Gigs.objects.filter(id=id).first()
+        check = join_cls.objects.get(gig=post, student=student)
+        if not check and bio == post.user and student != post.user:
+            if check.status == "Đang Học":
+                check.status = "Dừng/Nghỉ/Hoàn Thành Học"
+                check.save()
+            else:
+                return redirect("all_error")
+            return redirect("gigs_view", id=id)
+        else:
+            return redirect("all_error")
+    else:
+        return redirect("a_login")
+
+
+def check_apply(request, id):
+    if request.user.is_authenticated:
+        bio = Bio.objects.get(user=request.user)
+        post = Gigs.objects.filter(id=id).first()
+        check = join_cls.objects.get(
+            gig=post, student=bio, status="Chờ Duyệt Đơn Đăng Ký")
+        if check and bio and post:
+            context = {'students': check, 'gig': post}
+        else:
+            return redirect("all_error")
+    else:
+        return redirect("a_login")
+    return render(request, "gigs/check_list.html", context)
+
+
+def check_student(request, id):
+    if request.user.is_authenticated:
+        bio = Bio.objects.get(user=request.user)
+        post = Gigs.objects.filter(id=id).first()
+        check = join_cls.objects.get(
+            gig=post, student=bio, status="Đang Học")
+        if check and bio and post:
+            context = {'students': check, 'gig': post}
+        else:
+            return redirect("all_error")
+    else:
+        return redirect("a_login")
+    return render(request, "gigs/check_list.html", context)
+
+
+def view_all_gig(request):
+    if request.user.is_authenticated:
+        bio = Bio.objects.get(user=request.user)
+        post = Gigs.objects.filter(user=bio).all()
+        if bio and post:
+            teen = float(Web3.to_wei(
+                contract.functions.balanceOf(bio.address).call(), 'ether'))
+
+            context = {'posts': post, 'teen': teen}
+        else:
+            return redirect("all_error")
+    else:
+        return render("a_login")
+    return render(request, 'gigs/list.html', context)

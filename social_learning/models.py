@@ -21,7 +21,7 @@ class Bio(models.Model):
     edu_rank = models.ForeignKey(
         Education_rank, on_delete=models.CASCADE, related_name="user_edu_rank")
     avatar = models.ImageField(upload_to="images/", null=True, blank=True)
-    thumnail = models.ImageField(upload_to="images/", null=True, blank=True)
+    thumbnail = models.ImageField(upload_to="images/", null=True, blank=True)
 
 
 class Subject(models.Model):

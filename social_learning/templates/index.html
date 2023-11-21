@@ -50,7 +50,7 @@
                                         <div class="row">
                                             <div class="col-lg">
                                                 <label>Tên Người Dùng</label>
-                                                <input type="text" class="form-control w-100" required>
+                                                <input type="text" name="username" class="form-control w-100" required>
                                             </div>
                                             <div class="col-lg">
                                                 <label>Học Vấn</label>
@@ -62,39 +62,39 @@
                                             </div>
                                             <div class="col-lg">
                                                 <label>Lớp</label>
-                                                <input type="number" class="form-control w-100" required>
+                                                <input type="number" name="grade" class="form-control w-100" required>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top: 10px;">
                                             <div class="col-lg">
                                                 <label>Email</label>
-                                                <input type="text" class="form-control" required>
+                                                <input type="email" name="email" class="form-control" required>
                                             </div> 
                                         </div>
                                         <div class="row" style="margin-top: 10px;">
                                             <div class="col-lg">
                                                 <label>Avatar</label>
-                                                <input type="file" class="form-control" required>
+                                                <input type="file" name="avatar" class="form-control" required>
                                             </div>
                                             <div class="col-lg">
                                                 <label>Ảnh Bìa</label>
-                                                <input type="file" class="form-control" required>
+                                                <input type="file" name="thumbnail" class="form-control" required>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top: 10px;">
                                             <div class="col-lg">
                                                 <label>Mô Tả</label>
-                                                <textarea class="form-control" rows="5" cols="5"></textarea>
+                                                <textarea class="form-control" name="description" rows="5" cols="5"></textarea>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top: 10px;">
                                             <div class="col-lg">
                                                 <label>Mật Khẩu</label>
-                                                <input type="password" class="form-control" required>
+                                                <input type="password" name="password" class="form-control" required>
                                             </div>
                                             <div class="col-lg">
                                                 <label>Mã PIN ví BDT</label>
-                                                <input type="password" pattern="[0-9]*" inputmode="numberic" maxlength="6" class="form-control" required>
+                                                <input type="password" name="passcode" pattern="[0-9]*" inputmode="numberic" maxlength="6" class="form-control" required>
                                             </div>
                                         </div>
                                     </div>
